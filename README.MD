@@ -34,6 +34,14 @@ This template supports the Conversions API Gateway, which allows you to serve th
 
 If you leave the Gateway Script URL field blank, the template will use the standard Snap servers (default behavior).
 
+## One Init per Pixel ID
+
+Many tags can use the same Pixel ID on one page. The template sends `init` for the first of these tags only. Later tags send only their event.
+
+A later tag sends `init` again only when it has a new identity value or a new Additional Initialization Data value. An example is a hashed email that appears after a login in a single-page app. When the tag only adds new values, this `init` also sends the earlier values again, so no value is lost. When the tag changes a value other than `event_tag`, the earlier values are dropped, because it is a different person. A new page URL alone does not cause a new `init`.
+
+`init` gets only the Pixel ID, the page URL, the user identity fields and the Additional Initialization Data table. Event fields, such as price, item IDs, currency, transaction ID and Client Deduplication ID, go only with the event. The template keeps the sent `init` values in template storage, so it needs the Accesses Template Storage permission.
+
 ## Testing a template change
 
 Import this branch's `template.tpl` in a GTM Web container under Templates > Tag Templates > New > Import. Run every scenario in the Tests tab, then save the template. The tests mock GTM APIs and do not send events to Snap.
